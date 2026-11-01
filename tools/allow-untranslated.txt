@@ -1,0 +1,29 @@
+/system/fonts/Roboto-Regular.ttf
+# 上面那一行只是示例，说明路径/URL 会自动跳过，不必写进来。
+# 这里放「故意不翻译」的专有名词 / 品牌名 / 模块名，一行一个。
+BRENE
+SuSFS
+BreZygisk
+BreWheel
+Telegram
+HMA-OSS
+Vector
+Canary
+TEESimulator
+Tricky Addon
+Latest CI
+Play Integrity Fork
+NoMount
+NoMount Suite
+Re-Malwack
+susfs4ksu-module
+SuSFS Manager
+ReSuSFS
+Tricky Store / TEESimulator-RS / AlwaysStrong
+Zygisk Assistant
+Nohello
+Shamiko
+Hybrid Mount
+Magic Mount-rs
+OverlayFS MetaModule
+FuseHide

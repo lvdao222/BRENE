@@ -1,3 +1,5 @@
-BRENE.zip
-node_modules
-pnpm-lock.yaml
+dist/
+.preview/
+dom*.html
+__pycache__/
+module/webroot/__i18n_probe.mjs

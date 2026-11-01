@@ -324,3 +324,77 @@ md-tabs {
 	position: relative;
 	top: -1px;
 }
+
+/* 语言切换（设置 → 语言） */
+.card-row.lang-row {
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.card-row.lang-row .card-row__body {
+	flex: 1 1 200px;
+	min-width: 0;
+}
+
+.lang-switch {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	padding: 4px;
+	margin-left: auto;
+	border-radius: 999px;
+	background-color: var(--md-sys-color-surface-container-high);
+	-webkit-tap-highlight-color: transparent;
+}
+
+/* 窄屏（手机 WebView）：文字一行，按钮整行等分 */
+@media (max-width: 560px) {
+	.card-row.lang-row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: 12px;
+	}
+
+	.card-row.lang-row .card-row__body {
+		flex: 0 0 auto;
+	}
+
+	.card-row.lang-row .lang-switch {
+		display: flex;
+		width: 100%;
+		margin-left: 0;
+	}
+
+	.lang-switch__btn {
+		flex: 1 1 0;
+		text-align: center;
+	}
+}
+
+.lang-switch__btn {
+	appearance: none;
+	-webkit-appearance: none;
+	border: none;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 0.85rem;
+	line-height: 1;
+	padding: 8px 14px;
+	border-radius: 999px;
+	white-space: nowrap;
+	color: var(--md-sys-color-on-surface-variant);
+	background-color: transparent;
+	transition:
+		background-color 0.15s ease,
+		color 0.15s ease;
+}
+
+.lang-switch__btn:active {
+	transform: scale(0.97);
+}
+
+.lang-switch__btn.active {
+	background-color: var(--md-sys-color-primary);
+	color: var(--md-sys-color-on-primary);
+	font-weight: 600;
+}

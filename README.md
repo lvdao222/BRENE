@@ -1,5 +1,9 @@
 # BRENE - KernelSU module with SuSFS support and more
 
+> **中文版 / Chinese WebUI** — 本 fork 汉化了 WebUI，并在「设置」里加了语言切换（English / 简体中文）。
+> 说明：[README.zh.md](./README.zh.md)｜上游更新后怎么再翻一遍：[UPDATE-PROMPT.md](./UPDATE-PROMPT.md)｜汉化界面截图：[images/zh-home.png](./images/zh-home.png)
+> 本 fork 以 AGPL-3.0 发布，原作者署名保留在 `module/module.prop`。
+
 This module is used for installing a userspace helper tool called ksu_susfs and susfs (They are the same binary) into /data/adb/ksu/bin/ to communicate with SUSFS kernel.
 
 More information soon.
