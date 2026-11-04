@@ -13,20 +13,19 @@ CUSTOM_ROM_NAMES="lineage|infinity|evolution|crdroid|mistos|axion|pixelos|rising
 # Load config
 [[ -e "${PERSISTENT_DIR}/config.sh" ]] && source "${PERSISTENT_DIR}/config.sh"
 
-update_config_date
-
 # Update Description
-susfs_total_features=9
+susfs_total_features=10
+susfs_variant=$(${SUSFS_BIN} show variant)
 susfs_version=$(${SUSFS_BIN} show version)
 susfs_features_number=$(${SUSFS_BIN} show enabled_features | wc -l)
 kernel_version=$(cat /proc/version | awk '{print $3}' | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
 description="KernelSU module with SuSFS support and more"
 if [[ "${susfs_version}" == "v2"* ]]; then
 	status="Active ✅"
-	${KSU_BIN} module config set override.description "[Status: ${status} | Kernel Version: ${kernel_version} | SuSFS: ${susfs_version} | SuSFS Kernel Features: ${susfs_features_number}/${susfs_total_features} enabled] ${description}"
+	${KSU_BIN} module config set override.description "[Status: ${status} | Kernel Version: ${kernel_version} | SuSFS: ${susfs_version} (${susfs_variant}) | SuSFS Kernel Features: ${susfs_features_number}/${susfs_total_features} enabled] ${description}"
 else
 	status="Not Working ❌"
-	${KSU_BIN} module config set override.description "[Status: ${status} | Kernel Version: ${kernel_version} | SuSFS: ${susfs_version} | SuSFS Kernel Features: ${susfs_features_number}/${susfs_total_features} enabled] ${description}"
+	${KSU_BIN} module config set override.description "[Status: ${status} | Kernel Version: ${kernel_version} | SuSFS: ${susfs_version} (${susfs_variant}) | SuSFS Kernel Features: ${susfs_features_number}/${susfs_total_features} enabled] ${description}"
 fi
 
 # SU Compat
@@ -167,18 +166,6 @@ if [[ "${config_spoof_system_properties}" == "1" ]]; then
 
 	# set after vold settles so the encrypted transition still reaches vendor init triggers
 	if_prop_exits_resetprop_n "ro.crypto.state" "encrypted"
-fi
-# Spoof Fingerprint Properties
-if [[ "${config_spoof_fingerprint_properties}" == "1" ]]; then
-	spoof_fingerprint_properties
-fi
-# Spoof UTC Properties
-if [[ "${config_spoof_utc_properties}" == "1" ]]; then
-	spoof_utc_properties
-fi
-# Spoof Date Properties
-if [[ "${config_spoof_date_properties}" == "1" ]]; then
-	spoof_date_properties
 fi
 # Spoof OS Security Patch Level Property
 if [[ "${config_spoof_os_security_patch_level_property}" == "1" ]]; then
@@ -427,6 +414,7 @@ if [[ "${config_hide_third_party_apps}" == "1" ]]; then
 fi
 
 resetprop -c --force
+update_config_date
 
 if [[ "${config_brene_logs}" == "1" ]]; then
 	echo "boot-completed.sh ✅" >> "${PERSISTENT_DIR}/log.txt"

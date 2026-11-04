@@ -19,7 +19,14 @@ Re-Malwack
 susfs4ksu-module
 SuSFS Manager
 ReSuSFS
-Tricky Store / TEESimulator-RS / AlwaysStrong
+Tricky Store / TEESimulator-RS / Tricky Store OSS / AlwaysStrong
+Oh My Keymint
+Yurikey Manager
+ZNNext
+Integrity Box
+fgetpriority
+mountify
+Material Files
 Zygisk Assistant
 Nohello
 Shamiko

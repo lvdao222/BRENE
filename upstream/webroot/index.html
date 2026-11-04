@@ -78,12 +78,20 @@
 					<div class="card-row">
 						<div class="card-row__body">
 							<span class="card-row__tag--code">- Global Umount modules enabled</span>
-							<span class="card-row__tag--code">- Use a file manager with root access</span>
+							<span class="card-row__tag--code">- Use a file manager with root access. <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a></span>
 							<span class="card-row__tag--code"
 								>-
 								<a href="https://keybox.kowx712.cc/">Strong Keyboxes</a>
 							</span>
 						</div>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row">
+						<div class="card-row__body">
+							<span class="card-row__title">Check Play Integrity API</span>
+						</div>
+						<md-filled-button id="check_piapi">Check</md-filled-button>
 						<md-ripple></md-ripple>
 					</div>
 				</div>
@@ -217,6 +225,22 @@
 						<md-ripple></md-ripple>
 					</div>
 
+					<div class="card-row" data-module="playintegrityfix">
+						<div class="card-row__body">
+							<span class="card-row__title">Integrity Box</span>
+							<span class="card-row__sub status-text">Status: Not installed</span>
+						</div>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row" data-module="fgetpriority">
+						<div class="card-row__body">
+							<span class="card-row__title">fgetpriority</span>
+							<span class="card-row__sub status-text">Status: Not installed</span>
+						</div>
+						<md-ripple></md-ripple>
+					</div>
+
 					<div class="card-row" data-module="ReSuSFS">
 						<div class="card-row__body">
 							<span class="card-row__title">ReSuSFS</span>
@@ -227,7 +251,31 @@
 
 					<div class="card-row" data-module="tricky_store">
 						<div class="card-row__body">
-							<span class="card-row__title">Tricky Store / TEESimulator-RS / AlwaysStrong</span>
+							<span class="card-row__title">Tricky Store / TEESimulator-RS / Tricky Store OSS / AlwaysStrong</span>
+							<span class="card-row__sub status-text">Status: Not installed</span>
+						</div>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row" data-module="oh_my_keymint">
+						<div class="card-row__body">
+							<span class="card-row__title">Oh My Keymint</span>
+							<span class="card-row__sub status-text">Status: Not installed</span>
+						</div>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row" data-module="Yurikey">
+						<div class="card-row__body">
+							<span class="card-row__title">Yurikey Manager</span>
+							<span class="card-row__sub status-text">Status: Not installed</span>
+						</div>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row" data-module="zygisknextsu">
+						<div class="card-row__body">
+							<span class="card-row__title">ZNNext</span>
 							<span class="card-row__sub status-text">Status: Not installed</span>
 						</div>
 						<md-ripple></md-ripple>
@@ -276,6 +324,14 @@
 					<div class="card-row" data-module="magic_mount_rs">
 						<div class="card-row__body">
 							<span class="card-row__title">Magic Mount-rs</span>
+							<span class="card-row__sub status-text">Status: Not installed</span>
+						</div>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row" data-module="mountify">
+						<div class="card-row__body">
+							<span class="card-row__title">mountify</span>
 							<span class="card-row__sub status-text">Status: Not installed</span>
 						</div>
 						<md-ripple></md-ripple>
@@ -339,28 +395,31 @@
 
 					<div class="card-row">
 						<div class="card-row__body">
-							<span class="card-row__title">Disable child process restrictions</span>
-							<span class="card-row__sub">Disable restrictions on the system resource usage of the app child processes</span>
-						</div>
-						<md-switch icons id="disable_child_process_restrictions"></md-switch>
-						<md-ripple></md-ripple>
-					</div>
-
-					<div class="card-row">
-						<div class="card-row__body">
 							<span class="card-row__title">Max color saturation</span>
 							<span class="card-row__sub">Force maximum color saturation via SurfaceFlinger</span>
 						</div>
 						<md-switch icons id="saturation"></md-switch>
 						<md-ripple></md-ripple>
 					</div>
+				</div>
 
+				<p class="section-label">Advanced</p>
+				<div class="card-group">
 					<div class="card-row">
 						<div class="card-row__body">
 							<span class="card-row__title">Set logcat and logd buffer to 64K</span>
 							<span class="card-row__sub">Reduce CPU overhead and battery drain by shrinking buffer size</span>
 						</div>
 						<md-switch icons id="shrink_buffer_size"></md-switch>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row">
+						<div class="card-row__body">
+							<span class="card-row__title">Disable child process restrictions</span>
+							<span class="card-row__sub">Disable restrictions on the system resource usage of the app child processes</span>
+						</div>
+						<md-switch icons id="disable_child_process_restrictions"></md-switch>
 						<md-ripple></md-ripple>
 					</div>
 				</div>
@@ -394,6 +453,25 @@
 						<md-switch icons id="hide_custom_recovery"></md-switch>
 						<md-ripple></md-ripple>
 					</div>
+				</div>
+
+				<p class="section-label">Advanced</p>
+				<div class="card-group">
+					<div class="card-row">
+						<div class="card-row__body">
+							<span class="card-row__title">Hide suspicious PTYs</span>
+						</div>
+						<md-switch icons id="hide_suspicious_pty"></md-switch>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row">
+						<div class="card-row__body">
+							<span class="card-row__title">Hide /data/local/tmp paths</span>
+						</div>
+						<md-switch icons id="paths_hiding__data_local_tmp"></md-switch>
+						<md-ripple></md-ripple>
+					</div>
 
 					<div class="card-row">
 						<div class="card-row__body">
@@ -414,22 +492,6 @@
 							<span class="card-row__sub">data, media, obb</span>
 						</div>
 						<md-switch icons id="paths_hiding__non_standard_sdcard_android"></md-switch>
-						<md-ripple></md-ripple>
-					</div>
-
-					<div class="card-row">
-						<div class="card-row__body">
-							<span class="card-row__title">Hide /data/local/tmp paths</span>
-						</div>
-						<md-switch icons id="paths_hiding__data_local_tmp"></md-switch>
-						<md-ripple></md-ripple>
-					</div>
-
-					<div class="card-row">
-						<div class="card-row__body">
-							<span class="card-row__title">Hide suspicious PTYs</span>
-						</div>
-						<md-switch icons id="hide_suspicious_pty"></md-switch>
 						<md-ripple></md-ripple>
 					</div>
 				</div>
@@ -466,30 +528,6 @@
 							<span class="card-row__sub">Spoof some system properties</span>
 						</div>
 						<md-switch icons id="spoof_system_properties"></md-switch>
-						<md-ripple></md-ripple>
-					</div>
-
-					<div class="card-row">
-						<div class="card-row__body">
-							<span class="card-row__title">Spoof UTC properties</span>
-						</div>
-						<md-switch icons id="spoof_utc_properties"></md-switch>
-						<md-ripple></md-ripple>
-					</div>
-
-					<div class="card-row">
-						<div class="card-row__body">
-							<span class="card-row__title">Spoof date properties</span>
-						</div>
-						<md-switch icons id="spoof_date_properties"></md-switch>
-						<md-ripple></md-ripple>
-					</div>
-
-					<div class="card-row">
-						<div class="card-row__body">
-							<span class="card-row__title">Spoof fingerprint properties</span>
-						</div>
-						<md-switch icons id="spoof_fingerprint_properties"></md-switch>
 						<md-ripple></md-ripple>
 					</div>
 
@@ -723,7 +761,7 @@
 				<div class="card-group">
 					<div class="card-row">
 						<div class="card-row__body">
-							<span class="card-row__title">Hide custom ROM paths</span>
+							<span class="card-row__title">Hide Custom ROM paths</span>
 							<span class="card-row__sub card-row__tag--danger">If your app does not work, disable umount (App Profile)</span>
 							<span class="card-row__sub card-row__tag--danger">Example: Web Browsers</span>
 						</div>
@@ -733,7 +771,7 @@
 
 					<div class="card-row">
 						<div class="card-row__body">
-							<span class="card-row__title">Hide custom ROM paths (Extended)</span>
+							<span class="card-row__title">Hide Custom ROM paths (Extended)</span>
 							<span class="card-row__sub">If your app does not work, disable umount (App Profile)</span>
 						</div>
 						<md-switch icons id="hide_custom_rom_paths_2"></md-switch>
@@ -773,10 +811,13 @@
 						<md-switch icons id="spoof_libstagefright"></md-switch>
 						<md-ripple></md-ripple>
 					</div>
+				</div>
 
+				<p class="section-label">Advanced</p>
+				<div class="card-group">
 					<div class="card-row">
 						<div class="card-row__body">
-							<span class="card-row__title">Remove custom ROM properties</span>
+							<span class="card-row__title">Remove Custom ROM properties</span>
 						</div>
 						<md-switch icons id="rom_props"></md-switch>
 						<md-ripple></md-ripple>

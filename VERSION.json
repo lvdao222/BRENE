@@ -1,8 +1,8 @@
 {
-  "upstream": "v0.0.74",
-  "upstream_zip": "BRENE-v0.0.74.zip",
-  "translated_at": "2026-11-01",
+  "upstream": "v0.0.75",
+  "upstream_zip": "BRENE-v0.0.75.zip",
+  "translated_at": "2026-11-05",
   "languages": ["en", "zh"],
-  "i18n_entries": 184,
+  "i18n_entries": 183,
   "notes": "上游 webroot 原文存放在 upstream/webroot/，用于下次三方合并"
 }
