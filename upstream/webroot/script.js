@@ -43,6 +43,10 @@ const configs = [
 		action: (enabled) => setFeature(`service call SurfaceFlinger 1034 i32 ${enabled ? 1 : 0}`),
 	},
 	{
+		id: 'hide_oem_unlocking_toggle',
+		action: (enabled) => setFeature(`resetprop -n ro.oem_unlock_supported ${enabled ? 0 : 1}`),
+	},
+	{
 		id: 'disable_child_process_restrictions',
 		action: (enabled) => {
 			setFeature(`resetprop -n persist.sys.fflag.override.settings_enable_monitor_phantom_procs ${enabled ? false : true}`)
@@ -50,6 +54,7 @@ const configs = [
 	},
 	{ id: 'pif_props' },
 	{ id: 'rom_props' },
+	{ id: 'hide_gapps' },
 	{ id: 'brene_logs' },
 	{ id: 'enable_log' },
 	{ id: 'spoof_uname' },
@@ -62,12 +67,14 @@ const configs = [
 	{ id: 'hide_lineage_strings' },
 	{ id: 'spoof_libstagefright' },
 	{ id: 'hide_ksu_directories' },
+	{ id: 'hide_vector_injection' },
 	{ id: 'hide_third_party_apps' },
 	{ id: 'hide_custom_rom_paths' },
 	{ id: 'hide_custom_rom_paths_2' },
 	{ id: 'hide_framework_res_apk' },
 	{ id: 'enable_avc_log_spoofing' },
 	{ id: 'spoof_cmdline_or_bootconfig' },
+	{ id: 'hide_all_apps_with_uid_10000_and_above' },
 	{ id: 'fix_data_local_tmp_inconsistencies' },
 	{ id: 'spoof_system_properties' },
 	{ id: 'spoof_os_security_patch_level_property' },
@@ -99,7 +106,7 @@ exec('resetprop ro.build.version.release && resetprop ro.build.version.sdk').the
 	container.innerText = `${splits[0]} (API ${splits[1]}) | SDK ${splits[1]}`
 })
 
-// Load SuSFS Variant
+// Load SUSFS Variant
 exec('susfs show variant').then((result) => {
 	const container = document.querySelector('#susfs-variant .card-row__sub')
 
@@ -482,6 +489,7 @@ exec(`cat ${PERSISTENT_DIR}/config.sh`).then((result) => {
 	const pathField = document.getElementById('custom_sus_path_text_field')
 	const loopField = document.getElementById('custom_sus_path_loop_text_field')
 	const openRedirectField = document.getElementById('custom_open_redirect_text_field')
+	const sus_path_uid_filter_field = document.getElementById('custom_sus_path_uid_filter_field')
 	const applyButton = document.getElementById('unified_apply_button')
 	const tabs = document.getElementById('sus_tabs')
 	const scrollContainer = document.getElementById('horizontal_scroll_container')
@@ -499,6 +507,9 @@ exec(`cat ${PERSISTENT_DIR}/config.sh`).then((result) => {
 	exec(`cat ${PERSISTENT_DIR}/custom_open_redirect.txt`).then((result) => {
 		openRedirectField.value = result.errno === 0 ? `${result.stdout}` : ''
 	})
+	exec(`cat ${PERSISTENT_DIR}/custom_sus_path_uid_filter.txt`).then((result) => {
+		sus_path_uid_filter_field.value = result.errno === 0 ? `${result.stdout}` : ''
+	})
 
 	// Tabs and Scroll Sync
 	tabs.addEventListener('change', () => {
@@ -510,17 +521,17 @@ exec(`cat ${PERSISTENT_DIR}/config.sh`).then((result) => {
 		})
 	})
 
-	let scrollTimeout
-	scrollContainer.addEventListener('scroll', () => {
-		clearTimeout(scrollTimeout)
-		scrollTimeout = setTimeout(() => {
-			const width = scrollContainer.getBoundingClientRect().width
-			const index = Math.round(scrollContainer.scrollLeft / width)
-			if (tabs.activeTabIndex !== index) {
-				tabs.activeTabIndex = index
-			}
-		}, 50)
-	})
+	// let scrollTimeout
+	// scrollContainer.addEventListener('scroll', () => {
+	// 	clearTimeout(scrollTimeout)
+	// 	scrollTimeout = setTimeout(() => {
+	// 		const width = scrollContainer.getBoundingClientRect().width
+	// 		const index = Math.round(scrollContainer.scrollLeft / width)
+	// 		if (tabs.activeTabIndex !== index) {
+	// 			tabs.activeTabIndex = index
+	// 		}
+	// 	}, 50)
+	// })
 
 	applyButton.onclick = () => {
 		const index = tabs.activeTabIndex
@@ -544,10 +555,24 @@ exec(`cat ${PERSISTENT_DIR}/config.sh`).then((result) => {
 				file = 'custom_open_redirect.txt'
 				content = openRedirectField.value
 				break
+			case 4:
+				file = 'custom_sus_path_uid_filter.txt'
+				content = sus_path_uid_filter_field.value
+				break
 		}
 
 		if (file) {
-			if (content === '') {
+			if (file === 'custom_sus_path_uid_filter.txt') {
+				content === '' ? (content = ' ') : (content = content.replaceAll('\n', ','))
+
+				exec(`echo "${content}" > ${PERSISTENT_DIR}/${file}`).then((result) => {
+					if (result.errno === 0) {
+						exec(`susfs set_sus_path_uid_filter "${content}"`).then((result) => {
+							toast(result.errno === 0 ? 'Saved and applied' : result.stderr)
+						})
+					}
+				})
+			} else if (content === '') {
 				exec(`printf '' > ${PERSISTENT_DIR}/${file}`).then((result) => {
 					toast(result.errno === 0 ? 'Success, reboot to apply' : result.stderr)
 				})
@@ -563,6 +588,72 @@ UNIQUE_EOF
 				})
 			}
 		}
+	}
+})()
+
+// Remove suspicious directories in /sdcard/Android/[data | media | obb]
+;(async () => {
+	const textField = document.getElementById('remove_sus_dir_sdcard_android_data_media_obb_text_field')
+	const applyButton = document.getElementById('remove_sus_dir_sdcard_android_data_media_obb_apply_button')
+	const file = `${PERSISTENT_DIR}/remove_sus_dir_sdcard_android_data_media_obb.txt`
+
+	exec(`cat ${file}`).then((result) => {
+		textField.value = result.errno === 0 ? result.stdout : ''
+	})
+
+	applyButton.onclick = () => {
+		const content = textField.value
+		exec(`
+cat <<'UNIQUE_EOF' > ${file}
+${content}
+UNIQUE_EOF
+		`).then((result) => {
+			toast(result.errno === 0 ? 'Success, reboot to apply' : result.stderr)
+		})
+	}
+})()
+
+// Hide non-standard /sdcard paths exceptions
+;(async () => {
+	const exceptionsField = document.getElementById('hide_non_standard_sdcard_paths_exceptions_text_field')
+	const applyButton = document.getElementById('hide_non_standard_sdcard_paths_exceptions_apply_button')
+	const file = `${PERSISTENT_DIR}/hide_non_standard_sdcard_paths_exceptions.txt`
+
+	exec(`cat ${file}`).then((result) => {
+		exceptionsField.value = result.errno === 0 ? result.stdout : ''
+	})
+
+	applyButton.onclick = () => {
+		const content = exceptionsField.value
+		exec(`
+cat <<'UNIQUE_EOF' > ${file}
+${content}
+UNIQUE_EOF
+		`).then((result) => {
+			toast(result.errno === 0 ? 'Success, reboot to apply' : result.stderr)
+		})
+	}
+})()
+
+// Hide /data/local/tmp paths exceptions
+;(async () => {
+	const exceptionsField = document.getElementById('data_local_tmp_exceptions_text_field')
+	const applyButton = document.getElementById('data_local_tmp_exceptions_apply_button')
+	const file = `${PERSISTENT_DIR}/hide_data_local_tmp_exceptions.txt`
+
+	exec(`cat ${file}`).then((result) => {
+		exceptionsField.value = result.errno === 0 ? result.stdout : ''
+	})
+
+	applyButton.onclick = () => {
+		const content = exceptionsField.value
+		exec(`
+cat <<'UNIQUE_EOF' > ${file}
+${content}
+UNIQUE_EOF
+		`).then((result) => {
+			toast(result.errno === 0 ? 'Success, reboot to apply' : result.stderr)
+		})
 	}
 })()
 
@@ -657,6 +748,8 @@ UNIQUE_EOF
 	bodyContent.addEventListener(
 		'touchstart',
 		(e) => {
+			if (e.target.tagName === 'MD-PRIMARY-TAB') return
+
 			touchStartX = e.touches[0].clientX
 			touchStartY = e.touches[0].clientY
 		},
@@ -666,6 +759,8 @@ UNIQUE_EOF
 	bodyContent.addEventListener(
 		'touchend',
 		(e) => {
+			if (e.target.tagName === 'MD-PRIMARY-TAB') return
+
 			if (e.target.closest('.tab-bar') === null) {
 				const touchEndX = e.changedTouches[0].clientX
 				const touchEndY = e.changedTouches[0].clientY

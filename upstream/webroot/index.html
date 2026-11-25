@@ -17,7 +17,7 @@
 					</div>
 
 					<div class="group">
-						<a href="https://gitlab.com/simonpunk/susfs4ksu">SuSFS</a>
+						<a href="https://gitlab.com/simonpunk/susfs4ksu">SUSFS</a>
 						<span class="item-version" id="susfs-version"> v0.0.0 </span>
 					</div>
 				</div>
@@ -29,7 +29,7 @@
 			<button class="tab-btn" data-tab="android">Android</button>
 			<button class="tab-btn" data-tab="hiding">Hiding</button>
 			<button class="tab-btn" data-tab="spoofing">Spoofing</button>
-			<button class="tab-btn" data-tab="susfs">SuSFS</button>
+			<button class="tab-btn" data-tab="susfs">SUSFS</button>
 			<button class="tab-btn" data-tab="ksu">KSU</button>
 			<button class="tab-btn" data-tab="rom">ROM</button>
 			<button class="tab-btn" data-tab="advanced">Advanced</button>
@@ -170,7 +170,7 @@
 						<md-ripple></md-ripple>
 					</div>
 
-					<div class="card-row" data-module="playintegrityfix">
+					<div class="card-row" data-module="playintegrityfork">
 						<div class="card-row__body">
 							<span class="card-row__title">
 								<a href="https://github.com/osm0sis/PlayIntegrityFork">Play Integrity Fork</a>
@@ -207,7 +207,7 @@
 					</div>
 				</div>
 
-				<p class="section-label">Incompatible modules</p>
+				<p class="section-label">Incompatible/Untested modules</p>
 				<div class="card-group" id="incompatible-modules">
 					<div class="card-row" data-module="susfs4ksu">
 						<div class="card-row__body">
@@ -219,15 +219,31 @@
 
 					<div class="card-row" data-module="susfs_manager">
 						<div class="card-row__body">
-							<span class="card-row__title">SuSFS Manager</span>
+							<span class="card-row__title">SUSFS Manager</span>
 							<span class="card-row__sub status-text">Status: Not installed</span>
 						</div>
 						<md-ripple></md-ripple>
 					</div>
 
-					<div class="card-row" data-module="playintegrityfix">
+					<div class="card-row" data-module="zygisksu">
 						<div class="card-row__body">
-							<span class="card-row__title">Integrity Box</span>
+							<span class="card-row__title">Zygisk Next, NeoZygisk, NyaZygisk</span>
+							<span class="card-row__sub status-text">Status: Not installed</span>
+						</div>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row" data-module="zygisk_lsposed">
+						<div class="card-row__body">
+							<span class="card-row__title">LSPosed, ReLSPosed, LSPosed-Irena</span>
+							<span class="card-row__sub status-text">Status: Not installed</span>
+						</div>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row" data-module="tricky_store">
+						<div class="card-row__body">
+							<span class="card-row__title">Tricky Store, TEESimulator-RS, Tricky Store OSS, AlwaysStrong</span>
 							<span class="card-row__sub status-text">Status: Not installed</span>
 						</div>
 						<md-ripple></md-ripple>
@@ -249,14 +265,6 @@
 						<md-ripple></md-ripple>
 					</div>
 
-					<div class="card-row" data-module="tricky_store">
-						<div class="card-row__body">
-							<span class="card-row__title">Tricky Store / TEESimulator-RS / Tricky Store OSS / AlwaysStrong</span>
-							<span class="card-row__sub status-text">Status: Not installed</span>
-						</div>
-						<md-ripple></md-ripple>
-					</div>
-
 					<div class="card-row" data-module="oh_my_keymint">
 						<div class="card-row__body">
 							<span class="card-row__title">Oh My Keymint</span>
@@ -273,6 +281,32 @@
 						<md-ripple></md-ripple>
 					</div>
 
+					<div class="card-row" data-module="playintegrityfix">
+						<div class="card-row__body">
+							<span class="card-row__title">Integrity Box</span>
+							<span class="card-row__sub status-text">Status: Not installed</span>
+						</div>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row" data-module="onyxzygisk">
+						<div class="card-row__body">
+							<span class="card-row__title">
+								<a href="https://github.com/OnyxZygisk/OnyxZygisk/commit/5b1abb30f4e675af26bd7608752f2a508f1a3595">OnyxZygisk (AI Slop)</a>
+							</span>
+							<span class="card-row__sub status-text">Status: Not installed</span>
+						</div>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row" data-module="yukizygisk">
+						<div class="card-row__body">
+							<span class="card-row__title">YukiZygisk</span>
+							<span class="card-row__sub status-text">Status: Not installed</span>
+						</div>
+						<md-ripple></md-ripple>
+					</div>
+
 					<div class="card-row" data-module="zygisknextsu">
 						<div class="card-row__body">
 							<span class="card-row__title">ZNNext</span>
@@ -284,6 +318,14 @@
 					<div class="card-row" data-module="zygisk-assistant">
 						<div class="card-row__body">
 							<span class="card-row__title">Zygisk Assistant</span>
+							<span class="card-row__sub status-text">Status: Not installed</span>
+						</div>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row" data-module="zygisk-detach">
+						<div class="card-row__body">
+							<span class="card-row__title">zygisk-detach</span>
 							<span class="card-row__sub status-text">Status: Not installed</span>
 						</div>
 						<md-ripple></md-ripple>
@@ -407,7 +449,7 @@
 				<div class="card-group">
 					<div class="card-row">
 						<div class="card-row__body">
-							<span class="card-row__title">Set logcat and logd buffer to 64K</span>
+							<span class="card-row__title">Set logcat buffer to 64KiB</span>
 							<span class="card-row__sub">Reduce CPU overhead and battery drain by shrinking buffer size</span>
 						</div>
 						<md-switch icons id="shrink_buffer_size"></md-switch>
@@ -438,8 +480,17 @@
 
 					<div class="card-row">
 						<div class="card-row__body">
+							<span class="card-row__title">Hide custom recovery</span>
+							<span class="card-row__sub">TWRP, OrangeFox</span>
+						</div>
+						<md-switch icons id="hide_custom_recovery"></md-switch>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row">
+						<div class="card-row__body">
 							<span class="card-row__title">Hide third party apps</span>
-							<span class="card-row__sub">Hide them using set_priority_uid_filter, HMA-OSS is needed for userspace side</span>
+							<span class="card-row__sub">Hide them using PRIORITY_UID_FILTER feature, HMA-OSS is needed for userspace side</span>
 						</div>
 						<md-switch icons id="hide_third_party_apps"></md-switch>
 						<md-ripple></md-ripple>
@@ -447,10 +498,26 @@
 
 					<div class="card-row">
 						<div class="card-row__body">
-							<span class="card-row__title">Hide custom recovery</span>
-							<span class="card-row__sub">TWRP, OrangeFox</span>
+							<span class="card-row__title">Hide all apps with uid >= 10000</span>
+							<span class="card-row__sub">Hide them using PRIORITY_UID_FILTER feature, HMA-OSS is needed for userspace side</span>
 						</div>
-						<md-switch icons id="hide_custom_recovery"></md-switch>
+						<md-switch icons id="hide_all_apps_with_uid_10000_and_above"></md-switch>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row">
+						<div class="card-row__body">
+							<span class="card-row__title">Hide OEM unlocking toggle</span>
+						</div>
+						<md-switch icons id="hide_oem_unlocking_toggle"></md-switch>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row">
+						<div class="card-row__body">
+							<span class="card-row__title">Hide Vector Injection (Xposed Framework)</span>
+						</div>
+						<md-switch icons id="hide_vector_injection"></md-switch>
 						<md-ripple></md-ripple>
 					</div>
 				</div>
@@ -468,21 +535,41 @@
 					<div class="card-row">
 						<div class="card-row__body">
 							<span class="card-row__title">Hide /data/local/tmp paths</span>
+							<span class="card-row__sub">Enter one item per line (shell wildcard pattern is compatible).</span>
+							<span class="card-row__tag--code">Example:</span>
+							<span class="card-row__tag--code">BreZygisk-*</span>
 						</div>
 						<md-switch icons id="paths_hiding__data_local_tmp"></md-switch>
 						<md-ripple></md-ripple>
+					</div>
+					<div class="card-group sus-card">
+						<div class="snap-item">
+							<md-filled-text-field id="data_local_tmp_exceptions_text_field" class="content" type="textarea" rows="6" label="EXCEPTIONS"></md-filled-text-field>
+						</div>
+						<div class="sus-footer">
+							<md-filled-button id="data_local_tmp_exceptions_apply_button">APPLY</md-filled-button>
+						</div>
 					</div>
 
 					<div class="card-row">
 						<div class="card-row__body">
 							<span class="card-row__title">Hide non-standard /sdcard paths</span>
 							<span class="card-row__sub">Standard paths:</span>
-							<span class="card-row__sub">
-								Alarms, Android, Audiobooks, DCIM, Documents, Download, Movies, Music, Notifications, Pictures, Podcasts, Recordings, Ringtones, (MIUI)
-							</span>
+							<span class="card-row__sub"> Alarms, Android, Audiobooks, DCIM, Documents, Download, Movies, Music, Notifications, Pictures, Podcasts, Recordings, Ringtones </span>
+							<span class="card-row__sub">Enter one item per line (shell wildcard pattern is compatible).</span>
+							<span class="card-row__tag--code">Example:</span>
+							<span class="card-row__tag--code">BreZygisk-*</span>
 						</div>
 						<md-switch icons id="paths_hiding__non_standard_sdcard"></md-switch>
 						<md-ripple></md-ripple>
+					</div>
+					<div class="card-group sus-card">
+						<div class="snap-item">
+							<md-filled-text-field id="hide_non_standard_sdcard_paths_exceptions_text_field" class="content" type="textarea" rows="6" label="EXCEPTIONS"></md-filled-text-field>
+						</div>
+						<div class="sus-footer">
+							<md-filled-button id="hide_non_standard_sdcard_paths_exceptions_apply_button">APPLY</md-filled-button>
+						</div>
 					</div>
 
 					<div class="card-row">
@@ -572,7 +659,7 @@
 				<div class="card-group">
 					<div class="card-row" id="susfs-variant">
 						<div class="card-row__body">
-							<span class="card-row__title">SuSFS variant</span>
+							<span class="card-row__title">SUSFS variant</span>
 							<span class="card-row__sub">_</span>
 						</div>
 						<md-ripple></md-ripple>
@@ -583,7 +670,7 @@
 							<span class="card-row__title">..5.u.S status</span>
 							<span class="card-row__sub">_</span>
 							<span class="card-row__tag--code">
-								SuSFS redirects the sus path to a supposed not-existing path named '..5.u.S', and this is the only way to settle the cross check of returned errno from various
+								SUSFS redirects the sus path to a supposed not-existing path named '..5.u.S', and this is the only way to settle the cross check of returned errno from various
 								syscalls, but one disadvantage is that if the path itself can be written/created by the app (MANAGE_EXTERNAL_STORAGE granted), then it is futile to hide it
 							</span>
 						</div>
@@ -629,8 +716,8 @@
 
 					<div class="card-row">
 						<div class="card-row__body">
-							<span class="card-row__title">SuSFS logs</span>
-							<span class="card-row__sub">Enable or disable SuSFS logs in kernel</span>
+							<span class="card-row__title">SUSFS logs</span>
+							<span class="card-row__sub">Enable or disable SUSFS logs in kernel</span>
 						</div>
 						<md-switch icons id="enable_log"></md-switch>
 						<md-ripple></md-ripple>
@@ -720,6 +807,16 @@
 							<span class="card-row__tag--code">Example:</span>
 							<span class="card-row__tag--code">/system/etc/hosts /data/local/tmp/hosts 3</span>
 							<!-- OPEN_REDIRECT -->
+
+							<!-- SUS_PATH_UID_FILTER -->
+							<span class="card-row__title">SUS_PATH_UID_FILTER</span>
+							<span class="card-row__sub">Only uids of added package name will be visible to sus paths, and vice versa</span>
+							<span class="card-row__sub">* Important Notes *</span>
+							<span class="card-row__sub">- App uid is resolved from /data/system/packages.list</span>
+							<span class="card-row__sub">- Only effective for all processes with uid >= 10000</span>
+							<span class="card-row__tag--code">Example:</span>
+							<span class="card-row__tag--code">com.brave.browser</span>
+							<!-- SUS_PATH_UID_FILTER -->
 						</div>
 						<md-ripple></md-ripple>
 					</div>
@@ -729,6 +826,7 @@
 							<md-primary-tab id="tab_sus_path" aria-controls="panel_sus_path">PATH</md-primary-tab>
 							<md-primary-tab id="tab_sus_path_loop" aria-controls="panel_sus_path_loop">PATH LOOP</md-primary-tab>
 							<md-primary-tab id="tab_open_redirect" aria-controls="panel_open_redirect">OPEN_REDIRECT</md-primary-tab>
+							<md-primary-tab id="tab_sus_path_uid_filter" aria-controls="panel_sus_path_uid_filter">SUS_PATH_UID_FILTER</md-primary-tab>
 						</md-tabs>
 
 						<div class="snap-container" id="horizontal_scroll_container">
@@ -747,6 +845,10 @@
 							<div class="snap-item">
 								<md-filled-text-field class="content" id="custom_open_redirect_text_field" type="textarea" rows="12" label="OPEN_REDIRECT"></md-filled-text-field>
 							</div>
+
+							<div class="snap-item">
+								<md-filled-text-field class="content" id="custom_sus_path_uid_filter_field" type="textarea" rows="12" label="SUS_PATH_UID_FILTER"></md-filled-text-field>
+							</div>
 						</div>
 
 						<div class="sus-footer">
@@ -761,9 +863,18 @@
 				<div class="card-group">
 					<div class="card-row">
 						<div class="card-row__body">
+							<span class="card-row__title">Hide Gapps</span>
+						</div>
+						<md-switch icons id="hide_gapps"></md-switch>
+						<md-ripple></md-ripple>
+					</div>
+
+					<div class="card-row">
+						<div class="card-row__body">
 							<span class="card-row__title">Hide Custom ROM paths</span>
-							<span class="card-row__sub card-row__tag--danger">If your app does not work, disable umount (App Profile)</span>
-							<span class="card-row__sub card-row__tag--danger">Example: Web Browsers</span>
+							<span class="card-row__sub card-row__tag--danger">If your app does not work:</span>
+							<span class="card-row__sub card-row__tag--danger">- Disable umount (App Profile) (SUSFS 2.4.0 and older)</span>
+							<span class="card-row__sub card-row__tag--danger">- Use sus_path_uid_filter feature (SUSFS 2.4.0+)</span>
 						</div>
 						<md-switch icons id="hide_custom_rom_paths"></md-switch>
 						<md-ripple></md-ripple>
@@ -772,7 +883,6 @@
 					<div class="card-row">
 						<div class="card-row__body">
 							<span class="card-row__title">Hide Custom ROM paths (Extended)</span>
-							<span class="card-row__sub">If your app does not work, disable umount (App Profile)</span>
 						</div>
 						<md-switch icons id="hide_custom_rom_paths_2"></md-switch>
 						<md-ripple></md-ripple>
@@ -844,6 +954,31 @@
 			<section class="tab-panel" data-panel="advanced">
 				<p class="section-label">Advanced</p>
 				<div class="card-group">
+					<div class="card-row">
+						<div class="card-row__body">
+							<span class="card-row__title">Remove suspicious directories in /sdcard/Android/[data | media | obb]</span>
+							<span class="card-row__sub">Enter one package name per line</span>
+							<span class="card-row__tag--code">Example:</span>
+							<span class="card-row__tag--code">com.termux</span>
+							<span class="card-row__tag--code">org.frknkrc44.hma_oss</span>
+						</div>
+						<md-ripple></md-ripple>
+					</div>
+					<div class="card-group sus-card">
+						<div class="snap-item">
+							<md-filled-text-field
+								id="remove_sus_dir_sdcard_android_data_media_obb_text_field"
+								class="content"
+								type="textarea"
+								rows="6"
+								label="Package names"
+							></md-filled-text-field>
+						</div>
+						<div class="sus-footer">
+							<md-filled-button id="remove_sus_dir_sdcard_android_data_media_obb_apply_button">APPLY</md-filled-button>
+						</div>
+					</div>
+
 					<div class="card-row">
 						<div class="card-row__body">
 							<span class="card-row__title">Fix /data/local/tmp inconsistencies</span>

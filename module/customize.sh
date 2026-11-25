@@ -20,7 +20,7 @@ echo ""
 
 # Check Compatibility
 if [[ -z "${KSU}" ]]; then
-	abort '[❌] SuSFS is only for KernelSU or forks!'
+	abort '[❌] SUSFS is only for KernelSU or forks!'
 fi
 
 if [[ "${ARCH}" != "arm64" ]]; then
@@ -39,6 +39,7 @@ fi
 
 cp -f "${MODPATH}/tools/susfs" "${DEST_BIN_DIR}"
 chmod +x "${MODPATH}/inotify.sh"
+chmod +x "${MODPATH}/remove_sus_dir.sh"
 chmod +x "${MODPATH}/remove_ksu_directory.sh"
 chmod 755 "${DEST_BIN_DIR}/susfs"
 ln -sf "${DEST_BIN_DIR}/susfs" "${DEST_BIN_DIR}/sus"       # For development
@@ -46,9 +47,9 @@ ln -sf "${DEST_BIN_DIR}/susfs" "${DEST_BIN_DIR}/ksu_susfs" # For compatibility
 
 susfs_version=$(${SUSFS_BIN} show version)
 if [[ "${susfs_version}" == "v2.4.0" || "${susfs_version}" == "v2.3.0" || "${susfs_version}" == "v2.2.0" ]]; then
-	echo "[✅] Detected SuSFS version: ${susfs_version}"
+	echo "[✅] Detected SUSFS version: ${susfs_version}"
 else
-	abort "[❌] Not supported SuSFS version ${susfs_version}!"
+	abort "[❌] Not supported SUSFS version ${susfs_version}!"
 fi
 
 # Reset module description
@@ -56,25 +57,25 @@ susfs_total_features=10
 susfs_variant=$(${SUSFS_BIN} show variant)
 susfs_features_number=$(${SUSFS_BIN} show enabled_features | wc -l)
 kernel_version=$(cat /proc/version | awk '{print $3}' | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
-description="KernelSU module with SuSFS support and more"
+description="KernelSU module with SUSFS support and more"
 status="Waiting for reboot ⏱️"
-${KSU_BIN} module config set override.description "[Status: ${status} | Kernel Version: ${kernel_version} | SuSFS: ${susfs_version} (${susfs_variant}) | SuSFS Kernel Features: ${susfs_features_number}/${susfs_total_features} enabled] ${description}"
+${KSU_BIN} module config set override.description "[Status: ${status} | Kernel Version: ${kernel_version} | SUSFS: ${susfs_version} (${susfs_variant}) | SUSFS Kernel Features: ${susfs_features_number}/${susfs_total_features} enabled] ${description}"
 
-# Disable other SuSFS modules
+# Disable other SUSFS modules
 [[ -e "${KSU_MODULES_DIR}/susfs4ksu" ]] && {
-	touch "${KSU_MODULES_DIR}/susfs4ksu/disable" && echo '[✅] Disabling other SuSFS module'
+	touch "${KSU_MODULES_DIR}/susfs4ksu/disable" && echo '[✅] Disabling other SUSFS module'
 }
 [[ -e "${KSU_MODULES_DIR}/susfs_manager" ]] && {
-	touch "${KSU_MODULES_DIR}/susfs_manager/disable" && echo '[✅] Disabling other SuSFS module'
+	touch "${KSU_MODULES_DIR}/susfs_manager/disable" && echo '[✅] Disabling other SUSFS module'
 }
 [[ -e "${KSU_MODULES_DIR}/ReSuSFS" ]] && {
-	touch "${KSU_MODULES_DIR}/ReSuSFS/disable" && echo '[✅] Disabling other SuSFS module'
+	touch "${KSU_MODULES_DIR}/ReSuSFS/disable" && echo '[✅] Disabling other SUSFS module'
 }
 
 echo "[✅] Preparing brene persistent directory (${PERSISTENT_DIR})"
 mkdir -p "${PERSISTENT_DIR}"
 
-# Backup SuSFS binary
+# Backup SUSFS binary
 cp -pf "${DEST_BIN_DIR}/susfs" "${PERSISTENT_DIR}"
 
 files="
@@ -83,6 +84,10 @@ custom_kernel_umount.txt
 custom_sus_path.txt
 custom_sus_path_loop.txt
 custom_open_redirect.txt
+custom_sus_path_uid_filter.txt
+remove_sus_dir_sdcard_android_data_media_obb.txt
+hide_data_local_tmp_exceptions.txt
+hide_non_standard_sdcard_paths_exceptions.txt
 "
 for file in ${files}; do
 	if [[ ! -f "${PERSISTENT_DIR}/${file}" ]]; then

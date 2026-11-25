@@ -19,13 +19,13 @@ susfs_variant=$(${SUSFS_BIN} show variant)
 susfs_version=$(${SUSFS_BIN} show version)
 susfs_features_number=$(${SUSFS_BIN} show enabled_features | wc -l)
 kernel_version=$(cat /proc/version | awk '{print $3}' | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
-description="KernelSU module with SuSFS support and more"
+description="KernelSU module with SUSFS support and more"
 if [[ "${susfs_version}" == "v2"* ]]; then
 	status="Active ✅"
-	${KSU_BIN} module config set override.description "[Status: ${status} | Kernel Version: ${kernel_version} | SuSFS: ${susfs_version} (${susfs_variant}) | SuSFS Kernel Features: ${susfs_features_number}/${susfs_total_features} enabled] ${description}"
+	${KSU_BIN} module config set override.description "[Status: ${status} | Kernel Version: ${kernel_version} | SUSFS: ${susfs_version} (${susfs_variant}) | SUSFS Kernel Features: ${susfs_features_number}/${susfs_total_features} enabled] ${description}"
 else
 	status="Not Working ❌"
-	${KSU_BIN} module config set override.description "[Status: ${status} | Kernel Version: ${kernel_version} | SuSFS: ${susfs_version} (${susfs_variant}) | SuSFS Kernel Features: ${susfs_features_number}/${susfs_total_features} enabled] ${description}"
+	${KSU_BIN} module config set override.description "[Status: ${status} | Kernel Version: ${kernel_version} | SUSFS: ${susfs_version} (${susfs_variant}) | SUSFS Kernel Features: ${susfs_features_number}/${susfs_total_features} enabled] ${description}"
 fi
 
 # SU Compat
@@ -87,26 +87,20 @@ if [[ "${config_show_refresh_rate}" == "1" ]]; then
 	service call SurfaceFlinger 1034 i32 1
 fi
 
-# Set logcat and logd buffer to 64K
+# Set logcat buffer to 64KiB
 if [[ "${config_shrink_buffer_size}" == "1" ]]; then
 	logcat -G 64K
-	resetprop -n persist.logd.size 65536
 fi
 
-# Remove Custom ROM Properties
-if [[ "${config_rom_props}" == "1" ]]; then
-	resetprop | grep -iE "${CUSTOM_ROM_NAMES}" | awk -F'[][]' '{print $2}' | while read -r prop; do
-		resetprop -d "${prop}"
-	done
-
-	resetprop -d "ro.modversion"
+# Hide OEM unlocking toggle
+if [[ "${config_hide_oem_unlocking_toggle}" == "1" ]]; then
+	if_prop_exits_resetprop_n "ro.oem_unlock_supported" "0"
 fi
 
-# Remove Play Integrity Fix Properties
-if [[ "${config_pif_props}" == "1" ]]; then
-	resetprop | grep -iE "pihook|pixelprops|spoof" | awk -F'[][]' '{print $2}' | while read -r prop; do
-		resetprop -d -p "${prop}"
-	done
+# Hide Vector Injection (Xposed Framework)
+if [[ "${config_hide_vector_injection}" == "1" ]]; then
+	brene_sus_map "/data/adb/modules/zygisk_vector/zygisk/arm64-v8a.so"
+	brene_sus_map "/data/adb/modules/zygisk_vector/zygisk/armeabi-v7a.so"
 fi
 
 # Spoof /system/lib64/libstagefright.so
@@ -201,6 +195,14 @@ if [[ "${config_hide_ksu_directories}" == "1" ]]; then
 	inotifyd "${MODDIR}/remove_ksu_directory.sh" /storage/emulated/0/Android/obb:n &
 fi
 
+# Remove suspicious directories in /sdcard/Android/[data | media | obb]
+if [[ -e "${PERSISTENT_DIR}/remove_sus_dir_sdcard_android_data_media_obb.txt" ]]; then
+	sh "${MODDIR}/remove_sus_dir.sh"
+	inotifyd "${MODDIR}/remove_sus_dir.sh" /storage/emulated/0/Android/data:n &
+	inotifyd "${MODDIR}/remove_sus_dir.sh" /storage/emulated/0/Android/media:n &
+	inotifyd "${MODDIR}/remove_sus_dir.sh" /storage/emulated/0/Android/obb:n &
+fi
+
 ## For paths that are frequently modified, we can add them via 'add_sus_path_loop' ##
 ## Be reminded that without HMA's vold app data enabled, added sus_paths are still vulnerable to zwc exploit, so in this case users also have to add its underlying path as well ##
 
@@ -224,26 +226,23 @@ if [[ "${config_hide_custom_recovery}" == "1" ]]; then
 	[[ -e "/system/bin/install-recovery.sh" ]] && brene_sus_path_loop "/system/bin/install-recovery.sh"
 fi
 
-# Non-standard /storage/emulated/0
+# Hide non-standard /sdcard paths
 if [[ "${config_paths_hiding__non_standard_sdcard}" == "1" ]]; then
 	if [[ "${config_brene_logs}" == "1" ]]; then
 		{
 			echo ""
-			echo "####################"
-			echo "Non-standard /storage/emulated/0"
-			echo "####################"
+			echo "###############################"
+			echo "Hide non-standard /sdcard paths"
+			echo "###############################"
 		} >> "${PERSISTENT_DIR}/logs.txt"
 	fi
 
-	if [[ -z "$(resetprop ro.miui.ui.version.name)" ]]; then
-		standard_paths="Alarms Android Audiobooks DCIM Documents Download Movies Music Notifications Pictures Podcasts Recordings Ringtones"
-	else
-		standard_paths="Alarms Android Audiobooks DCIM Documents Download Movies Music Notifications Pictures Podcasts Recordings Ringtones MIUI"
-	fi
+	EXCEPTIONS_FILE="${PERSISTENT_DIR}/hide_non_standard_sdcard_paths_exceptions.txt"
+	STANDARD_PATHS="Alarms Android Audiobooks DCIM Documents Download Movies Music Notifications Pictures Podcasts Recordings Ringtones"
 
 	for i in /storage/emulated/0/*; do
 		pass=0
-		for x in ${standard_paths}; do
+		for x in ${STANDARD_PATHS}; do
 			if [[ "/storage/emulated/0/${x}" == "${i}" ]]; then
 				pass=1
 				break
@@ -252,25 +251,51 @@ if [[ "${config_paths_hiding__non_standard_sdcard}" == "1" ]]; then
 
 		[[ "${pass}" == "1" ]] && continue
 
+		is_excluded() {
+			[ -f "${EXCEPTIONS_FILE}" ] || return 1
+
+			local target="$1"
+			local line
+
+			while IFS= read -r line || [ -n "$line" ]; do
+				# Skip empty lines or comments
+				[[ -z "${line// /}" || "${line// /}" == "#"* ]] && continue
+
+				# shellcheck disable=SC2254
+				case "$target" in
+					$line)
+						return 0
+						;;
+				esac
+			done < "$EXCEPTIONS_FILE"
+
+			return 1
+		}
+
+		name=$(basename "${i}")
+		if is_excluded "$name"; then
+			continue
+		fi
+
 		brene_sus_path_loop "${i}"
 	done
 fi
 
-# Non-standard /storage/emulated/0/Android
+# Hide non-standard /sdcard/Android paths
 if [[ "${config_paths_hiding__non_standard_sdcard_android}" == "1" ]]; then
 	if [[ "${config_brene_logs}" == "1" ]]; then
 		{
 			echo ""
-			echo "############################"
-			echo "Non-standard /storage/emulated/0/Android"
-			echo "############################"
+			echo "#######################################"
+			echo "Hide non-standard /sdcard/Android paths"
+			echo "#######################################"
 		} >> "${PERSISTENT_DIR}/logs.txt"
 	fi
 
-	standard_paths="data media obb"
+	STANDARD_PATHS="data media obb"
 	for i in /storage/emulated/0/Android/*; do
 		pass=0
-		for x in ${standard_paths}; do
+		for x in ${STANDARD_PATHS}; do
 			if [[ "/storage/emulated/0/Android/${x}" == "${i}" ]]; then
 				pass=1
 				break
@@ -295,6 +320,36 @@ if [[ "${config_paths_hiding__data_local_tmp}" == "1" ]]; then
 	fi
 
 	for i in /data/local/tmp/*; do
+		[ -e "${i}" ] || continue
+
+		EXCEPTIONS_FILE="${PERSISTENT_DIR}/hide_data_local_tmp_exceptions.txt"
+		name=$(basename "${i}")
+
+		is_excluded() {
+			[ -f "${EXCEPTIONS_FILE}" ] || return 1
+
+			local target="$1"
+			local line
+
+			while IFS= read -r line || [ -n "$line" ]; do
+				# Skip empty lines or comments
+				[[ -z "${line// /}" || "${line// /}" == "#"* ]] && continue
+
+				# shellcheck disable=SC2254
+				case "$target" in
+					$line)
+						return 0
+						;;
+				esac
+			done < "$EXCEPTIONS_FILE"
+
+			return 1
+		}
+
+		if is_excluded "$name"; then
+			continue
+		fi
+
 		brene_sus_path_loop "${i}"
 	done
 fi
@@ -349,6 +404,16 @@ if [[ -e "${PERSISTENT_DIR}/custom_open_redirect.txt" ]]; then
 	done < "${PERSISTENT_DIR}/custom_open_redirect.txt"
 fi
 
+# Load custom_sus_path_uid_filter.txt
+if [[ -e "${PERSISTENT_DIR}/custom_sus_path_uid_filter.txt" ]]; then
+	while IFS= read -r i; do
+		# Skip empty lines or comments
+		[[ -z "${i// /}" || "${i// /}" == "#"* ]] && continue
+
+		${SUSFS_BIN} set_sus_path_uid_filter "${i}"
+	done < "${PERSISTENT_DIR}/custom_sus_path_uid_filter.txt"
+fi
+
 #### Hide the mmapped real file from various maps in /proc/self/, effective only for processes that are marked umounted with uid >= 10000 ####
 ## - *Please note that it is better to do it in boot-completed starge
 ##   Since some target path may be mounted by ksu, and make sure the
@@ -388,6 +453,22 @@ if [[ "${config_hide_framework_res_apk}" == "1" ]]; then
 	done
 fi
 
+# Remove Custom ROM Properties
+if [[ "${config_rom_props}" == "1" ]]; then
+	resetprop | grep -iE "${CUSTOM_ROM_NAMES}" | awk -F'[][]' '{print $2}' | while read -r prop; do
+		resetprop -d "${prop}"
+	done
+
+	resetprop -d "ro.modversion"
+fi
+
+# Remove Play Integrity Fix Properties
+if [[ "${config_pif_props}" == "1" ]]; then
+	resetprop | grep -iE "pihook|pixelprops|spoof" | awk -F'[][]' '{print $2}' | while read -r prop; do
+		resetprop -d -p "${prop}"
+	done
+fi
+
 # Spoof Android Verified Boot Hash Property
 if [[ "${config_spoof_verified_boot_hash}" != '' ]]; then
 	resetprop_n "ro.boot.vbmeta.digest" "${config_spoof_verified_boot_hash}"
@@ -409,7 +490,13 @@ fi
 
 # Hide third party apps
 if [[ "${config_hide_third_party_apps}" == "1" ]]; then
-	packages=$(cmd package list packages -3 | awk -F: '{out = out (out ? "," : "") $2} END {print out}')
+	packages=$(cmd package list packages -3 | awk -F: '{pkg = pkg (pkg ? "," : "") $2} END {print pkg}')
+	${SUSFS_BIN} set_priority_uid_filter "${packages}"
+fi
+
+# Hide all apps with uid >= 10000
+if [[ "${config_hide_all_apps_with_uid_10000_and_above}" == "1" ]]; then
+	packages=$(awk '$2 >= 10000 {pkg = pkg (pkg ? "," : "") $1} END {print pkg}' /data/system/packages.list)
 	${SUSFS_BIN} set_priority_uid_filter "${packages}"
 fi
 

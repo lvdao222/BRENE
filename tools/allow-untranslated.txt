@@ -34,3 +34,15 @@ Hybrid Mount
 Magic Mount-rs
 OverlayFS MetaModule
 FuseHide
+SUSFS
+SUSFS Manager
+Zygisk Next, NeoZygisk, NyaZygisk
+LSPosed, ReLSPosed, LSPosed-Irena
+Tricky Store, TEESimulator-RS, Tricky Store OSS, AlwaysStrong
+OnyxZygisk (AI Slop)
+YukiZygisk
+zygisk-detach
+BreZygisk-*
+com.brave.browser
+com.termux
+org.frknkrc44.hma_oss
