@@ -4,4 +4,4 @@ version=v0.0.77
 versionCode=77
 author=rrr333nnn333, simonpunk, KOWX712
 description=KernelSU module with SUSFS support and more
-updateJson=https://raw.githubusercontent.com/rrr333nnn333/BRENE/refs/heads/main/update.json
+updateJson=https://raw.githubusercontent.com/lvdao222/BRENE/refs/heads/zh-i18n/update.json
